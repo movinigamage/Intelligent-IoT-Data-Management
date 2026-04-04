@@ -1,31 +1,63 @@
-//handles the logic for processing mock data, using the repository for data access
-
 const MockRepository = require('../repositories/mockRepository');
+const {
+  getWideEntriesForDatasetName,
+  getAvailableMetricsForDatasetName,
+  filterWideEntriesByMetrics,
+} = require('./Timeseries_Service');
+
 const mockRepository = new MockRepository();
 
-//get all entries from the .json file
-const readProcessedData = () => {
-  return mockRepository.getMockData();
-};
+const datasetName =
+  process.env.DEFAULT_DATASET_NAME && process.env.DEFAULT_DATASET_NAME.trim();
 
-const getAvailableStreamNames = () => {
+async function readProcessedData() {
+  if (datasetName) {
+    try {
+      const fromDb = await getWideEntriesForDatasetName(datasetName);
+      if (fromDb) return fromDb;
+    } catch (err) {
+      console.warn('DB read failed, falling back to mock file:', err.message);
+    }
+  }
+  return mockRepository.getMockData();
+}
+
+async function getAvailableStreamNames() {
+  if (datasetName) {
+    try {
+      const metrics = await getAvailableMetricsForDatasetName(datasetName);
+      if (metrics) return metrics;
+    } catch (err) {
+      console.warn('DB stream names failed, falling back to mock file:', err.message);
+    }
+  }
+
   const entries = mockRepository.getMockData();
   if (!entries || entries.length === 0) return [];
 
-  const excludedKeys = ["created_at", "entry_id", "was_interpolated"];
-  return Object.keys(entries[0]).filter(key => !excludedKeys.includes(key));
-};
+  const excludedKeys = ['created_at', 'entry_id', 'was_interpolated'];
+  return Object.keys(entries[0]).filter((key) => !excludedKeys.includes(key));
+}
 
-const filterEntriesByStreamNames = (streamNames) => {
+async function filterEntriesByStreamNames(streamNames) {
+  if (datasetName) {
+    try {
+      const filtered = await filterWideEntriesByMetrics(datasetName, streamNames);
+      if (filtered) return filtered;
+    } catch (err) {
+      console.warn('DB filter failed, falling back to mock file:', err.message);
+    }
+  }
+
   const entries = mockRepository.getMockData();
 
-  return entries.map(entry => {
+  return entries.map((entry) => {
     const filteredEntry = {
       created_at: entry.created_at,
-      entry_id: entry.entry_id
+      entry_id: entry.entry_id,
     };
 
-    streamNames.forEach(name => {
+    streamNames.forEach((name) => {
       if (entry[name] !== undefined) {
         filteredEntry[name] = entry[name];
       }
@@ -33,10 +65,10 @@ const filterEntriesByStreamNames = (streamNames) => {
 
     return filteredEntry;
   });
-};
+}
 
 module.exports = {
   readProcessedData,
   getAvailableStreamNames,
-  filterEntriesByStreamNames
+  filterEntriesByStreamNames,
 };
