@@ -5,7 +5,8 @@ const {
   getStreams,
   getStreamNames,
   postFilterStreams
-} = require('../controllers/mockController');
+// } = require('../controllers/mockController');
+} = require('../controllers/dataController');
 
 const router = express.Router();
 

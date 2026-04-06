@@ -1,9 +1,23 @@
 const MockRepository = require('../repositories/mockRepository');
-const {
-  getWideEntriesForDatasetName,
-  getAvailableMetricsForDatasetName,
-  filterWideEntriesByMetrics,
-} = require('./Timeseries_Service');
+// const {
+//   getWideEntriesForDatasetName,
+//   getAvailableMetricsForDatasetName,
+//   filterWideEntriesByMetrics,
+// } = require('./Timeseries_Service');
+
+let getWideEntriesForDatasetName;
+let getAvailableMetricsForDatasetName;
+let filterWideEntriesByMetrics;
+
+try {
+  ({
+    getWideEntriesForDatasetName,
+    getAvailableMetricsForDatasetName,
+    filterWideEntriesByMetrics,
+  } = require('./Timeseries_Service'));
+} catch (err) {
+  console.warn('Timeseries service not available, using mock only');
+}
 
 const mockRepository = new MockRepository();
 
