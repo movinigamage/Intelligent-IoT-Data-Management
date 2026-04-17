@@ -1,5 +1,17 @@
 //handles data access for mock data, reading from local JSON file without a database yet
 
+const pool = require('../db/pool');
+
+class MockRepository {
+  async getMockData() {
+    const result = await pool.query('SELECT * FROM timeseries_long');
+    return result.rows;
+  }
+}
+
+module.exports = MockRepository;
+
+/*
 require('dotenv').config({ path: '../.env' });
 
 const fs = require('fs');
@@ -22,3 +34,4 @@ class MockRepository {
 }
 
 module.exports = MockRepository;
+*/

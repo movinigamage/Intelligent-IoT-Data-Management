@@ -1,5 +1,8 @@
 const router = require('express').Router();
 
+// Mock routes
+router.use(require('./mock'));
+
 // Analysis routes
 router.use(require('./analyseRoutes'));      // POST /api/analyse
 
