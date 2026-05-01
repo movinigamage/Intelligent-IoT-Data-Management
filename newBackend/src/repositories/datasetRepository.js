@@ -11,12 +11,12 @@
  * This repository does NOT interact with time‑series rows.
  */
 
-const db = require('../db'); // your pg Pool instance
+const db = require('../db/pool'); // pg Pool instance
 
 class DatasetRepository {
   async findAll() {
     const result = await db.query(`
-      SELECT id, name, description, created_at
+      SELECT id, name
       FROM datasets
       ORDER BY id ASC
     `);
@@ -26,7 +26,7 @@ class DatasetRepository {
   async findById(id) {
     const result = await db.query(
       `
-      SELECT id, name, description, created_at
+      SELECT id, name
       FROM datasets
       WHERE id = $1
       `,
@@ -35,20 +35,33 @@ class DatasetRepository {
     return result.rows[0] || null;
   }
 
+  async findByName(name) {
+    const result = await db.query(
+      `
+      SELECT id, name
+      FROM datasets
+      WHERE name = $1
+      `,
+      [name]
+    );
+    return result.rows[0] || null;
+  }
+
   async create(data) {
-    const { name, description } = data;
+    const { name } = data;
 
     const result = await db.query(
       `
-      INSERT INTO datasets (name, description)
-      VALUES ($1, $2)
-      RETURNING id, name, description, created_at
+      INSERT INTO datasets (name)
+      VALUES ($1)
+      RETURNING id, name
       `,
-      [name, description]
+      [name]
     );
 
     return result.rows[0];
   }
 }
 
-module.exports = DatasetRepository;
+module.exports = new DatasetRepository();
+

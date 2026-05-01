@@ -3,21 +3,20 @@
 const MockRepository = require('../repositories/mockRepository');
 const mockRepository = new MockRepository();
 
-//get all entries from the .json file
-const readProcessedData = () => {
-  return mockRepository.getMockData();
+const readProcessedData = async () => {
+  return await mockRepository.getMockData();
 };
 
-const getAvailableStreamNames = () => {
-  const entries = mockRepository.getMockData();
+const getAvailableStreamNames = async () => {
+  const entries = await mockRepository.getMockData();
   if (!entries || entries.length === 0) return [];
 
   const excludedKeys = ["created_at", "entry_id", "was_interpolated"];
   return Object.keys(entries[0]).filter(key => !excludedKeys.includes(key));
 };
 
-const filterEntriesByStreamNames = (streamNames) => {
-  const entries = mockRepository.getMockData();
+const filterEntriesByStreamNames = async (streamNames) => {
+  const entries = await mockRepository.getMockData();
 
   return entries.map(entry => {
     const filteredEntry = {

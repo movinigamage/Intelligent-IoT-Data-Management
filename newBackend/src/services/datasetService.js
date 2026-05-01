@@ -1,54 +1,47 @@
 /**
- * DATASET REPOSITORY
- * -------------------
- * Handles all database operations related to dataset metadata.
+ * DATASET SERVICE
+ * ----------------
+ * Handles business logic for dataset metadata.
  *
  * Responsibilities:
- *   - Fetch all datasets
- *   - Fetch a dataset by ID
- *   - Insert a new dataset
+ *   - Provide high‑level operations for controllers
+ *   - Delegate database access to DatasetRepository
+ *   - Validate and transform data if needed
  *
- * This repository only interacts with the `datasets` table.
+ * This service does NOT interact with time‑series rows.
+ * It only manages dataset metadata (id, name, etc.).
  */
 
-const pool = require('../db/pool'); // Correct import
+const datasetRepository = require('../repositories/datasetRepository');
 
-class DatasetRepository {
-  async findAll() {
-    const result = await pool.query(`
-      SELECT id, name, description, created_at
-      FROM datasets
-      ORDER BY id ASC
-    `);
-    return result.rows;
+class datasetService {
+  /**
+   * Returns all datasets.
+   */
+  async getAllDatasets() {
+    return await datasetRepository.findAll();
   }
 
-  async findById(id) {
-    const result = await pool.query(
-      `
-      SELECT id, name, description, created_at
-      FROM datasets
-      WHERE id = $1
-      `,
-      [id]
-    );
-    return result.rows[0] || null;
+  /**
+   * Returns a dataset by its numeric ID.
+   */
+  async getDatasetById(id) {
+    return await datasetRepository.findById(id);
   }
 
-  async create(data) {
-    const { name, description } = data;
+  /**
+   * Returns a dataset by its name (e.g., "sensor1").
+   */
+  async getDatasetByName(name) {
+    return await datasetRepository.findByName(name);
+  }
 
-    const result = await pool.query(
-      `
-      INSERT INTO datasets (name, description)
-      VALUES ($1, $2)
-      RETURNING id, name, description, created_at
-      `,
-      [name, description]
-    );
-
-    return result.rows[0];
+  /**
+   * Creates a new dataset.
+   */
+  async createDataset(data) {
+    return await datasetRepository.create(data);
   }
 }
 
-module.exports = DatasetRepository;
+module.exports = new datasetService();

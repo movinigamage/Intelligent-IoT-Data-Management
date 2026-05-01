@@ -7,7 +7,7 @@ router.use(require('./mock'));
 router.use(require('./analyseRoutes'));      // POST /api/analyse
 
 // Dataset metadata routes
-router.use(require('./datasetsRoutes'));     // GET/POST /api/datasets
+router.use(require('./datasetRoutes'));     // GET/POST /api/datasets
 
 // Time‑series routes
 router.use(require('./seriesRoutes'));       // GET/POST /api/datasets/:name/series

@@ -50,6 +50,7 @@ const getDatasetById = async (req, res) => {
 /**
  * POST /api/datasets
  * Creates a new dataset.
+ * Disabled — datasets are created automatically by ingestion.
  */
 const createDataset = async (req, res) => {
   try {
