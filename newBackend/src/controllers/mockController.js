@@ -6,21 +6,20 @@ const {
   filterEntriesByStreamNames
 } = require('../services/mockService');
 
-//GET /streams — Returns JSON file containing the stream data
-const getStreams = (req, res) => {
+const getStreams = async (req, res) => {
   try {
-    const data = readProcessedData();
+    const data = await readProcessedData();
     res.json(data);
+    console.log("DATA:", data);
   } catch (err) {
     console.error('Error reading stream data:', err);
     res.status(500).json({ error: 'Failed to load stream data' });
   }
 };
 
-//Get /stream-names — Returns an array of available stream names
-const getStreamNames = (req, res) => {
+const getStreamNames = async (req, res) => {
   try {
-    const streamNames = getAvailableStreamNames();
+    const streamNames = await getAvailableStreamNames();
     if (streamNames.length === 0) {
       return res.status(404).json({ error: "No stream names found" });
     }
@@ -31,8 +30,7 @@ const getStreamNames = (req, res) => {
   }
 };
 
-//POST /filter-streams — Returns JSON file by Filtering entries by stream names (without time window)
-const postFilterStreams = (req, res) => {
+const postFilterStreams = async (req, res) => {
   const { streamNames } = req.body;
 
   if (!Array.isArray(streamNames) || streamNames.length === 0) {
@@ -40,7 +38,7 @@ const postFilterStreams = (req, res) => {
   }
 
   try {
-    const filtered = filterEntriesByStreamNames(streamNames);
+    const filtered = await filterEntriesByStreamNames(streamNames);
     res.json(filtered);
   } catch (err) {
     console.error('Error filtering stream data:', err);
