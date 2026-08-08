@@ -74,7 +74,36 @@ These routes are better aligned with the application's dataset-specific dashboar
 
 Purpose:
 
-Returns wide-format time-series entries for the requested dataset.
+Returns wide-format time-series entries for the requested dataset using the dataset name/slug.
+
+### Request
+
+```http
+GET /api/datasets/{datasetName}/series
+```
+
+Example:
+
+```http
+GET /api/datasets/thingspeak-live/series
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "created_at": "2026-07-30T10:00:00Z",
+      "entry_id": 1,
+      "field1": 25.4,
+      "field2": 60.2
+    }
+  ],
+  "message": "Series data loaded successfully"
+}
+```
 
 Potential frontend consumers:
 
@@ -88,7 +117,7 @@ Potential frontend consumers:
 
 Integration status:
 
-**Available but not currently connected to the active Dashboard.**
+**Available for live dashboard integration using the dataset name/slug. Numeric database IDs should only be used for the separate `GET /api/datasets/:id` endpoint.**
 
 ## Dataset Series Filtering
 
