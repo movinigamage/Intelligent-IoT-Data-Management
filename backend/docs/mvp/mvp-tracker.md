@@ -86,3 +86,32 @@ Primary integration gap: **The active dashboard is not wired to dataset-aware ba
 AFIR-02 documents the current dependency state only.
 
 No mock dependencies were removed and no frontend/backend implementation was modified as part of this audit. Follow-up integration work should be handled through separate implementation tasks.
+
+
+## AFI-08 Environment and Test Gap Register
+
+| ID | Gap | Priority | Owner | Validation Target | Status |
+|---|---|---|---|---|---|
+| B-02 | Active server did not expose `/health` and `/ready` probes | Critical | Backend | `npm test` plus manual curl checks | In progress |
+| B-08 | Environment loading was inconsistent between app/server/pool paths | High | Backend | backend startup uses `backend/.env` consistently | In progress |
+| B-09 | `npm test` had no executable smoke tests | High | Backend | `npm test` runs `backend/test/*.test.js` | In progress |
+| B-10 | Demo database/schema assumptions were not validated before demo | Medium | Backend | `/ready` and runbook DB checks | Open |
+| B-11 | Frontend dashboard live API consumption still needs final validation | Medium | Frontend | dashboard manual check against backend API | Open |
+
+## AFI-08 MVP Demo Criteria
+
+### Entry Criteria
+
+- Backend starts from `backend/src/server.js`.
+- Required environment variables are loaded from `backend/.env` or deployment secrets.
+- Demo database schema is applied to a safe database.
+- ThingSpeak channel configuration is available.
+- Frontend API base URL points to the active backend.
+
+### Exit Criteria
+
+- `npm test` passes.
+- `/health` returns HTTP 200.
+- `/ready` returns HTTP 200 in a fully configured demo environment or controlled HTTP 503 when dependencies are unavailable.
+- Dataset and series API routes are reachable.
+- Remaining manual gaps have an owner, priority, and validation target.
