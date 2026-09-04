@@ -111,8 +111,10 @@ Future integration work should connect the dashboard's selected dataset to the d
 
 Any replacement of frontend-side filtering, statistics or correlation logic should be handled as separate implementation work and tested against the expected frontend response structure.
 
+
+
 AFIR-02 does not make those implementation changes.
-### B-05 frontend cutover findings - 2026-08-04
+
 ### B-05 update – Dashboard live-data cutover
 
 Status: Open
@@ -122,4 +124,3 @@ The frontend currently uses `sensorData1.json` through `useSensorData(true)`, ca
 The shared environment successfully returned 61 `thingspeak-live` rows, but frontend integration and per-sensor differentiation are not yet verified. Statistics, correlation and anomalies depend on BDAI-10, while alerts and alert history depend on BDAI-11.
 
 Exit evidence: Every sensor route must use an approved identifier, display distinct live data and remove supported mock dependencies.
-
