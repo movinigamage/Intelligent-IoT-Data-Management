@@ -74,7 +74,36 @@ These routes are better aligned with the application's dataset-specific dashboar
 
 Purpose:
 
-Returns wide-format time-series entries for the requested dataset.
+Returns wide-format time-series entries for the requested dataset using the dataset name/slug.
+
+### Request
+
+```http
+GET /api/datasets/{datasetName}/series
+```
+
+Example:
+
+```http
+GET /api/datasets/thingspeak-live/series
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "created_at": "2026-07-30T10:00:00Z",
+      "entry_id": 1,
+      "field1": 25.4,
+      "field2": 60.2
+    }
+  ],
+  "message": "Series data loaded successfully"
+}
+```
 
 Potential frontend consumers:
 
@@ -88,7 +117,7 @@ Potential frontend consumers:
 
 Integration status:
 
-**Available but not currently connected to the active Dashboard.**
+**Available for live dashboard integration using the dataset name/slug. Numeric database IDs should only be used for the separate `GET /api/datasets/:id` endpoint.**
 
 ## Dataset Series Filtering
 
@@ -155,3 +184,135 @@ The frontend and backend already have a broadly compatible wide-format time-seri
 The primary issue is not the absence of a backend series API. The main integration gap is that the active Dashboard remains configured to load mock data and does not currently use the selected dataset to request the corresponding dataset-aware backend series.
 
 Future implementation should be handled separately from this audit.
+
+---
+
+# AFI-07 Frontend-Ready Response Standards
+
+## Purpose
+
+This section defines the recommended response structures for the backend APIs so that frontend components receive consistent JSON payloads. These standards are intended to support future frontend and backend integration and reduce inconsistencies across API endpoints.
+
+---
+
+## Standard Response Format
+
+Every successful API response should follow this structure:
+
+```json
+{
+  "success": true,
+  "data": {},
+  "message": "Request completed successfully"
+}
+```
+
+Every failed API response should follow this structure:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": 500,
+    "message": "Failed to load resource"
+  }
+}
+```
+
+---
+
+## Series Response
+
+Route:
+
+GET `/api/datasets/:name/series`
+
+Recommended response:
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "created_at": "2026-07-30T10:00:00Z",
+      "entry_id": 1,
+      "field1": 25.4,
+      "field2": 60.2
+    }
+  ],
+  "message": "Series data loaded successfully"
+}
+```
+
+---
+
+## Analytics Response
+
+Route:
+
+POST `/api/analyse`
+
+Recommended response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "analysis": {
+      "highestCorrelation": {
+        "stream1": "field1",
+        "stream2": "field2",
+        "score": 0.94
+      }
+    }
+  },
+  "message": "Analysis completed successfully"
+}
+```
+
+---
+
+## Alert Response
+
+Recommended response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "alerts": [
+      {
+        "id": 1,
+        "severity": "High",
+        "message": "Temperature exceeded threshold",
+        "created_at": "2026-07-30T10:00:00Z"
+      }
+    ]
+  },
+  "message": "Alerts loaded successfully"
+}
+```
+
+---
+
+## Error Response
+
+Recommended response:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": 404,
+    "message": "Requested resource was not found"
+  }
+}
+```
+
+---
+
+## Response Standard Notes
+
+The recommended response format provides a consistent structure for successful and failed requests. Returning a standard JSON object containing success, data, message and error fields allows frontend components to process responses uniformly without implementing route-specific parsing logic.
+
+These standards are proposed for future implementation and do not modify the current backend behaviour observed during the AFIR-02 audit.
