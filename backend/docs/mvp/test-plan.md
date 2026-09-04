@@ -1,3 +1,4 @@
+
 # MVP Demo Test Plan
 
 ## Scope
@@ -57,3 +58,4 @@ The automated smoke checks verify:
 - Automated and manual test gaps are prioritised.
 - Demo blockers have owners and validation targets in the MVP tracker.
 - Demo entry and exit criteria are clear for repeat validation.
+
