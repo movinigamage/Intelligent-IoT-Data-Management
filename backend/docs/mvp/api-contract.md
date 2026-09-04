@@ -184,6 +184,7 @@ The frontend and backend already have a broadly compatible wide-format time-seri
 The primary issue is not the absence of a backend series API. The main integration gap is that the active Dashboard remains configured to load mock data and does not currently use the selected dataset to request the corresponding dataset-aware backend series.
 
 Future implementation should be handled separately from this audit.
+
 ---
 
 # AFI-07 Frontend-Ready Response Standards

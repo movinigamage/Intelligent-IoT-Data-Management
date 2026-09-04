@@ -86,31 +86,3 @@ Primary integration gap: **The active dashboard is not wired to dataset-aware ba
 AFIR-02 documents the current dependency state only.
 
 No mock dependencies were removed and no frontend/backend implementation was modified as part of this audit. Follow-up integration work should be handled through separate implementation tasks.
-
-# AFI-07 Response Standards Progress
-
-## Objective
-
-Define consistent frontend-ready API response structures for the core backend endpoints so the frontend can consume predictable payloads during future integration.
-
-## Progress
-
-- Reviewed the existing backend API routes documented during AFIR-02.
-- Defined standard response examples for series, analytics, alerts, and error responses.
-- Added representative payloads in `backend/docs/mvp/evidence/api-samples.json`.
-- Proposed a consistent response structure using:
-  - `success`
-  - `data`
-  - `message`
-  - `error`
-- Confirmed that the proposed structures support frontend integration without requiring changes to the current mock-data implementation.
-
-## Deliverables
-
-- Updated `backend/docs/mvp/api-contract.md`
-- Created `backend/docs/mvp/evidence/api-samples.json`
-- Updated `backend/docs/mvp/mvp-tracker.md`
-
-## Status
-
-Task completed and ready for review.
