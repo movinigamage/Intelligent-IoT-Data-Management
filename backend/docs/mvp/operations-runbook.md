@@ -75,3 +75,20 @@ JWT_SECRET=...
 REFRESH_TOKEN_SECRET=...
 ACCESS_TOKEN_TTL_SECONDS=900
 SESSION_TTL_HOURS=12
+```
+
+## ThingSpeak Polling Verification
+
+1. The poll log has `feedCount` greater than zero and `savedCount` greater than zero.
+2. `datasets` includes `thingspeak-live` (or `THINGSPEAK_DATASET_NAME` when supplied).
+3. The row-count query returns a positive `timeseries_rows` value for that dataset.
+
+## AFI-08 Setup Risk Notes
+
+- The active backend entry point is `backend/src/server.js`; smoke checks must target this file, not a separate Express app.
+- Environment variables are expected from `backend/.env` or the deployment secret mechanism.
+- Real `.env` files must not be committed.
+- `/health` is a liveness check and must not depend on the database.
+- `/ready` validates required environment and database connectivity; it may return HTTP 503 when dependencies are unavailable.
+- `npm test` is the repeatable local smoke test entry point for startup and route checks.
+- PostgreSQL schema setup must use a safe demo database because `backend/src/db/schema.sql` can reset tables.
